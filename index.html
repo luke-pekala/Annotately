@@ -1,15 +1,20 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/Annotately/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Annotately — Annotate PDFs and images with precision. Highlights, notes, shapes and more." />
-    <meta name="theme-color" content="#0d0d1a" />
+    <meta name="description" content="Annotately — Annotate PDFs and images with precision." />
     <title>Annotately</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- Geist font via Google Fonts proxy (Fontsource CDN as fallback) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" />
+    <style>
+      /* Inline Geist via system stack until loaded */
+      @import url('https://fonts.cdnfonts.com/css/geist-sans');
+      @import url('https://fonts.cdnfonts.com/css/geist-mono');
+    </style>
   </head>
   <body>
     <div id="root"></div>

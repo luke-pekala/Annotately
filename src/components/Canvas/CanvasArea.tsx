@@ -7,10 +7,8 @@ import { AnnotationLayer } from './AnnotationLayer'
 import { PageNav } from './PageNav'
 import type { Point, Annotation } from '@/types'
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString()
+// Fix PDF worker for Vite + GitHub Pages (avoids base-path issues)
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 export function CanvasArea() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -57,7 +55,10 @@ export function CanvasArea() {
   }, [handleWheel])
 
   const getPagePoint = (e: React.MouseEvent): Point => {
-    const pageEl = (containerRef.current?.querySelector('.react-pdf__Page') ?? containerRef.current?.querySelector('img')) as HTMLElement | null
+    const pageEl = (
+      containerRef.current?.querySelector('.react-pdf__Page') ??
+      containerRef.current?.querySelector('img')
+    ) as HTMLElement | null
     if (!pageEl) return { x: 0, y: 0 }
     const rect = pageEl.getBoundingClientRect()
     return { x: (e.clientX - rect.left) / zoom, y: (e.clientY - rect.top) / zoom }
@@ -75,7 +76,10 @@ export function CanvasArea() {
     setDragStart(pt)
     setIsDragging(true)
     if (activeTool === 'note') {
-      addAnnotation({ type: 'note', pageNumber: currentPage, color: activeColor, opacity: 1, position: pt, text: '', isOpen: true } as Omit<Annotation, 'id' | 'createdAt' | 'updatedAt'>)
+      addAnnotation({
+        type: 'note', pageNumber: currentPage, color: activeColor,
+        opacity: 1, position: pt, text: '', isOpen: true,
+      } as Omit<Annotation, 'id' | 'createdAt' | 'updatedAt'>)
       setIsDragging(false)
       setDragStart(null)
     }
@@ -143,16 +147,43 @@ export function CanvasArea() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div ref={containerRef} className="flex-1 overflow-auto" data-tool={activeTool} style={{ background: 'var(--canvas-bg)' }}>
-        <div className="flex justify-center py-8 min-h-full" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-          <div className="relative shadow-2xl" style={{ width: scaledWidth }}>
+      <div
+        ref={containerRef}
+        className="flex-1 overflow-auto"
+        data-tool={activeTool}
+        style={{ background: 'var(--canvas-bg)' }}
+      >
+        <div
+          className="flex justify-center py-8 min-h-full"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          <div
+            className="relative"
+            style={{
+              width: scaledWidth,
+              boxShadow: '0 4px 24px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04)',
+              borderRadius: '2px',
+            }}
+          >
             {activeDoc.type === 'pdf' ? (
-              <Document file={activeDoc.url} onLoadSuccess={onDocumentLoadSuccess} loading={<LoadingPage />} error={<ErrorPage />}>
+              <Document
+                file={activeDoc.url}
+                onLoadSuccess={onDocumentLoadSuccess}
+                loading={<LoadingPage />}
+                error={<ErrorPage />}
+              >
                 <Page
                   pageNumber={currentPage}
                   scale={zoom}
                   onLoadSuccess={onPageLoadSuccess}
-                  renderTextLayer={activeTool === 'highlight' || activeTool === 'underline' || activeTool === 'strikethrough'}
+                  renderTextLayer={
+                    activeTool === 'highlight' ||
+                    activeTool === 'underline' ||
+                    activeTool === 'strikethrough'
+                  }
                   renderAnnotationLayer={false}
                 />
               </Document>
@@ -169,6 +200,7 @@ export function CanvasArea() {
                 draggable={false}
               />
             )}
+
             {pageSize.width > 0 && (
               <AnnotationLayer
                 annotations={pageAnnotations}
@@ -182,26 +214,27 @@ export function CanvasArea() {
           </div>
         </div>
       </div>
-      {numPages > 1 && <PageNav current={currentPage} total={numPages} onPageChange={setCurrentPage} />}
+
+      {numPages > 1 && (
+        <PageNav current={currentPage} total={numPages} onPageChange={setCurrentPage} />
+      )}
     </div>
   )
 }
 
 function LoadingPage() {
   return (
-    <div className="w-[600px] h-[800px] bg-[var(--surface)] rounded flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-        <span className="text-sm text-[var(--text-secondary)]">Loading document…</span>
-      </div>
+    <div style={{ width: 595, height: 842, background: 'var(--card)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
+      <div style={{ width: 28, height: 28, border: '2px solid var(--border-strong)', borderTopColor: 'var(--accent-amber)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <span style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>Loading PDF…</span>
     </div>
   )
 }
 
 function ErrorPage() {
   return (
-    <div className="w-[600px] h-[400px] bg-[var(--surface)] rounded flex items-center justify-center">
-      <span className="text-sm text-red-400">Failed to load document</span>
+    <div style={{ width: 595, height: 400, background: 'var(--card)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontSize: 13, color: '#f87171' }}>Failed to load PDF. Make sure it's a valid PDF file.</span>
     </div>
   )
 }
