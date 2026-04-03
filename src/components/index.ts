@@ -1,0 +1,6 @@
+export { Header } from './Header'
+export { WelcomeScreen } from './WelcomeScreen'
+export { Toolbar } from './Toolbar/index'
+export { Sidebar } from './Sidebar/index'
+export { Canvas } from './Canvas'
+export { DropZone } from './DropZone'

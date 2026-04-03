@@ -1,0 +1,44 @@
+{
+  "name": "annotately",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A modern, powerful annotation tool for PDFs and images",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-pdf": "^9.1.0",
+    "pdfjs-dist": "^4.4.168",
+    "zustand": "^4.5.4",
+    "uuid": "^10.0.0",
+    "file-saver": "^2.0.5",
+    "lucide-react": "^0.414.0",
+    "clsx": "^2.1.1",
+    "react-colorful": "^5.6.1",
+    "react-hotkeys-hook": "^4.5.1",
+    "framer-motion": "^11.3.19"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^10.0.0",
+    "@types/file-saver": "^2.0.7",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.8",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4"
+  }
+}
